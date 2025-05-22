@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Rebooting...</title>
+  <style>
+    body {
+      background-color: black;
+      color: lime;
+      font-family: monospace;
+      padding: 20px;
+    }
+    #bios, #winner {
+      white-space: pre-line;
+      text-align: center;
+    }
+    #winner {
+      display: none;
+      color: white;
+      animation: fadeIn 2s ease-in-out;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: lime;
+      color: black;
+      border: none;
+      cursor: pointer;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="bios">
+Booting up...
+Checking system files...
+System secure.
+Applying patches...
+Cleaning malware...
+System reboot complete.
+</div>
+
+<div id="winner">
+  <h1>🎉 Congratulations!</h1>
+  <p>You have successfully escaped the hacker's trap.</p>
+  <p>🏆 You are now the Cyber Champion!</p>
+  <button onclick="goToLeaderboard()">View Leaderboard</button>
+</div>
+
+<script>
+  localStorage.setItem("gameFinished", "true");
+
+  setTimeout(() => {
+    document.getElementById("bios").style.display = "none";
+    document.getElementById("winner").style.display = "block";
+  }, 4000);
+
+  function goToLeaderboard() {
+    window.location.href = "leaderboard.html";
+  }
+</script>
+
+</body>
+</html>

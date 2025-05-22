@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Phishing Challenge</title>
+  <style>
+    body {
+      background-color: black;
+      color: lime;
+      font-family: monospace;
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .email {
+      border: 1px solid lime;
+      padding: 15px;
+      margin: 15px;
+      cursor: pointer;
+    }
+    #countdown {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: red;
+      color: white;
+      padding: 6px 12px;
+      font-size: 1em;
+      border-radius: 5px;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+<div id="countdown">⏱ Time Left: <span id="timeLeft">60</span>s</div>
+<h1>📧 Identify the Safe Email</h1>
+
+<div class="email" onclick="handleEmail(false)">Subject: Claim your free crypto now!</div>
+<div class="email" onclick="handleEmail(false)">Subject: Your account has been compromised</div>
+<div class="email" onclick="handleEmail(false)">Subject: Urgent! Verify your password</div>
+<div class="email" onclick="handleEmail(false)">Subject: Final notice: Pay your invoice</div>
+<div class="email" onclick="handleEmail(true)">Subject: Xiamen Cyber Club Meeting Agenda 📎</div>
+<div class="email" onclick="handleEmail(false)">Subject: Unusual sign-in detected</div>
+
+<script>
+  const hackerName = localStorage.getItem("hackerName");
+
+  let seconds = 60;
+  const timer = setInterval(() => {
+    if (localStorage.getItem("gameFinished") === "true") {
+      clearInterval(timer);
+      return;
+    }
+    seconds--;
+    document.getElementById("timeLeft").textContent = seconds;
+    if (seconds <= 0) {
+      clearInterval(timer);
+      window.location.href = "time_up.html";
+    }
+  }, 1000);
+
+  function handleEmail(isSafe) {
+    if (isSafe) {
+      updateProgress("level", 2);
+      window.location.href = "password.html";
+    } else {
+      updateProgress("level", 1, "Lost");
+      window.location.href = "ransom.html";
+    }
+  }
+
+  function updateProgress(field, level, status = "Lost") {
+    fetch("https://break-me-if-you-can-default-rtdb.asia-southeast1.firebasedatabase.app/players/" + hackerName + ".json", {
+      method: "PATCH",
+      body: JSON.stringify({
+        level: level,
+        status: status
+      })
+    });
+  }
+</script>
+
+</body>
+</html>

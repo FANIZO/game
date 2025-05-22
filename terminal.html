@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Terminal Escape</title>
+  <style>
+    body {
+      background-color: black;
+      color: lime;
+      font-family: monospace;
+      padding: 20px;
+    }
+    #terminal {
+      background-color: #111;
+      padding: 20px;
+      border: 1px solid lime;
+      min-height: 300px;
+      margin-bottom: 20px;
+    }
+    input {
+      background-color: black;
+      color: lime;
+      border: none;
+      font-size: 1em;
+      width: 90%;
+    }
+    #countdown {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: red;
+      color: white;
+      padding: 6px 12px;
+      font-size: 1em;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="countdown">⏱ Time Left: <span id="timeLeft">60</span>s</div>
+
+<h1>💻 Terminal Access</h1>
+<div id="terminal">
+  > Welcome hacker<br>
+  > Type <code>unlock</code> to continue...
+</div>
+<input id="cmd" autofocus onkeydown="handleCommand(event)">
+<script>
+  const hackerName = localStorage.getItem("hackerName");
+
+  let seconds = 60;
+  const timer = setInterval(() => {
+    if (localStorage.getItem("gameFinished") === "true") {
+      clearInterval(timer);
+      return;
+    }
+    seconds--;
+    document.getElementById("timeLeft").textContent = seconds;
+    if (seconds <= 0) {
+      clearInterval(timer);
+      window.location.href = "time_up.html";
+    }
+  }, 1000);
+
+  const terminal = document.getElementById("terminal");
+  function handleCommand(e) {
+    if (e.key === "Enter") {
+      const input = document.getElementById("cmd");
+      const val = input.value.trim();
+      terminal.innerHTML += "<br>> " + val;
+      if (val === "unlock") {
+        terminal.innerHTML += "<br>> Access code accepted. Initiating reboot...";
+        updateProgress(4);
+        setTimeout(() => {
+          window.location.href = "reboot.html";
+        }, 2000);
+      } else {
+        terminal.innerHTML += "<br>> Unknown command.";
+      }
+      input.value = "";
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+  }
+
+  function updateProgress(level, status = "Playing") {
+    fetch("https://break-me-if-you-can-default-rtdb.asia-southeast1.firebasedatabase.app/players/" + hackerName + ".json", {
+      method: "PATCH",
+      body: JSON.stringify({
+        level: level,
+        status: status
+      })
+    });
+  }
+</script>
+
+</body>
+</html>

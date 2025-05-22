@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Leaderboard</title>
+  <style>
+    body {
+      background-color: black;
+      color: lime;
+      font-family: monospace;
+      text-align: center;
+      padding: 40px;
+    }
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+      width: 80%;
+      margin-top: 30px;
+    }
+    th, td {
+      border: 1px solid lime;
+      padding: 8px 15px;
+    }
+    th {
+      background-color: darkgreen;
+      color: white;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<h1>📊 Cyber Challenge Leaderboard</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>Level</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody id="leaderboardBody">
+  </tbody>
+</table>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB2GuAPJXgBHlE-11JpheX-KbH3593UR8A",
+    authDomain: "break-me-if-you-can.firebaseapp.com",
+    databaseURL: "https://break-me-if-you-can-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "break-me-if-you-can",
+    storageBucket: "break-me-if-you-can.appspot.com",
+    messagingSenderId: "801113986886",
+    appId: "1:801113986886:web:da0604ab81c15507d23747",
+    measurementId: "G-S10SSC53N0"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const body = document.getElementById("leaderboardBody");
+  db.ref("players").on("value", snapshot => {
+    const data = snapshot.val();
+    body.innerHTML = "";
+    for (let player in data) {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${player}</td>
+        <td>${data[player].level || "?"}</td>
+        <td>${data[player].status || "?"}</td>
+      `;
+      body.appendChild(row);
+    }
+  });
+</script>
+
+</body>
+</html>
